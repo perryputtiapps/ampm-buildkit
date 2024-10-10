@@ -2,12 +2,12 @@ description: >
   Setup command
 steps:
   - run:
-        name: update and install tool dependencies
-        command: |-
-            apk update && apk add --no-cache findutils git openssh-client
+      name: update and install tool dependencies
+      command: |-
+          apk update && apk add --no-cache findutils git openssh-client
 
   - setup_remote_docker:
-        version: 24.0.9
+      version: 24.0.9
 
   # circleci doesn't allow to pass parameters
   - run:

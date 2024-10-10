@@ -2,13 +2,26 @@ description: >
   Sample description
 # What will this job do?
 
-executor: default
-
 parameters:
-  to:
+  cache_version:
     type: string
-    default: "World"
-    description: "Hello to whom?"
+    default: v1
+  before-builds:
+    type: steps
+    default: []
+  builds:
+    type: steps
+  after-builds:
+    type: steps
+    default: []
+executor: default
 steps:
-  - greet:
-      to: << parameters.to >>
+  - setup
+  - restore-cache:
+      cache_version: << parameters.cache_version >>
+  - pre-build
+  - steps: << parameters.before-builds >>
+  - steps: << parameters.builds >>
+  - save-cache:
+      cache_version: << parameters.cache_version >>
+  - steps: << parameters.after-builds >>
