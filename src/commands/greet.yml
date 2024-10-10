@@ -1,15 +1,22 @@
 description: >
-  This command echos "Hello World" using file inclusion.
-# What will this command do?
-# Descriptions should be short, simple, and clear.
-parameters:
-  to:
-    type: string
-    default: "World"
-    description: "Hello to whom?"
+  Setup command
 steps:
   - run:
-      environment:
-        PARAM_TO: <<parameters.to>>
-      name: Hello Greeting
-      command: <<include(scripts/greet.sh)>>
+        name: update and install tool dependencies
+        command: |-
+            apk update && apk add --no-cache findutils git openssh-client
+
+  - setup_remote_docker:
+        version: 24.0.9
+
+  # circleci doesn't allow to pass parameters
+  - run:
+      name: run the buildkit daemon
+      command: docker run -d --name buildkit-rootless --security-opt seccomp=unconfined --security-opt apparmor=unconfined moby/buildkit:v0.5.1-rootless --oci-worker-no-process-sandbox
+
+  # download the buildkit
+  - run:
+      name: downloading the buildkit
+      command: cd /tmp && wget https://github.com/moby/buildkit/releases/download/v0.5.1/buildkit-v0.5.1.linux-amd64.tar.gz && tar -C /usr -xvf buildkit-v0.5.1.linux-amd64.tar.gz bin/buildctl
+
+  - checkout
