@@ -1,5 +1,11 @@
+description: >
+  Docker exectutor
 docker:
-  - image: docker:24.0.9
-    environment:
-      C_FORCE_ROOT: 1
-      LC_ALL: en_US.UTF-8
+    - image: docker:24.0.9
+      environment:
+          C_FORCE_ROOT: 1
+          LC_ALL: en_US.UTF-8
+          BUILDKIT_HOST: docker-container://buildkit-rootless
+
+
+
